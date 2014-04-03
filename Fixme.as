@@ -98,7 +98,7 @@
 			如果在文件系统下 ExternalInterface.available的值也为 true,但是....
 			这个放最后一行执行,不会影响到
 			*/
-			!this.core.cfg.isTrue(this.pra['disable_js']) && new Ex4YUI();
+			this.core.cfg.isTrue(this.pra['js']) && new Ex4YUI();
 		}
 
 		//

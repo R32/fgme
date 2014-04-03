@@ -59,7 +59,7 @@
 	 */
 	public class GmeCore extends EventDispatcher{
 		
-		public static var version:String = '0.0.1';
+		public static var version:String = '0.0.2';
 		
 		public var  cfg:Config; //在外部对这个值进行检测
 		
@@ -114,8 +114,9 @@
 			//GameMusicEmu.SPRITE = main_sprite;
 			
 			this.gme = new GameMusicEmu();
-			this.bit = new Effect();
-			
+			if('beep'in cfg){
+				this.bit = new Effect(); //
+			}
 			this.timer = new Timer(300);
 			this.timer.addEventListener(TimerEvent.TIMER,this._onTimer)
 			
