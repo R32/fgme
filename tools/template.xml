@@ -1,0 +1,15 @@
+<xml>
+	<include name="${HXCPP}/toolchain/haxe-target.xml" />	
+	<files id="game-music-emu" filecount="::__current__.length::">
+	::foreach __current__::
+		<file name="./gme-master/gme/::__current__::" />
+	::end::
+	</files>
+	
+	<target id="default" output="gme${LIB_DBG}${LIBEXTRA}" tool="linker" toolid="static_link">		
+		<files id="game-music-emu" />
+		<!--<outdir name="../libs" />-->
+		<!-- 加到依赖, 当修改过这个 xml 文件后,重新编译结果 -->
+		<depend name="Build.xml" /> 
+	</target>
+</xml>
