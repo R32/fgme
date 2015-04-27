@@ -27,3 +27,7 @@ Experimental! 实验性, 尝试 hxcpp/cpp 混合编程
 	git submodule init
 	git submodule update
 	```
+
+#### 其它
+
+以前旧的版本 选择 [Original 分支](https://github.com/R32/hxgme/tree/Original)
