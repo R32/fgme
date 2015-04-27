@@ -7,6 +7,8 @@ Experimental! 实验性, 尝试 hxcpp/cpp 混合编程
 
 仅在 winXP 中做过测试. 目前感觉CPU占用 53%, 反而是 flash 生成的同样库却根本不占CPU.
 
+ 0. 需要将目录添加到库, `haxelib dev hxgme path/to/hxgme`
+ 
  1. 双击 `tools/gen.hxml` 将在 `project/` 目录下生成 build.xml 和 静态链接库(gme.lib)
  
  2. 打开 test/bin.hxml, 得到 test/bin/Test.exe, 运行
