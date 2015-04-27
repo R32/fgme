@@ -92,7 +92,7 @@
 			//this.re.y = this.panel.y;
 			this.re.addEventListener ('close',_onRevoltClose);
 			this.stage.addEventListener (Event.RESIZE ,resize);
-			setTimeout(this.resize,50);
+			setTimeout(this.resize,100);
 			/* 
 			init extend Javascript 设置 disable_js 禁用 JS 扩展,
 			如果在文件系统下 ExternalInterface.available的值也为 true,但是....
