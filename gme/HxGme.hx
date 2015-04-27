@@ -20,13 +20,27 @@ import haxe.io.BytesData;
 		}
 	}
 ')
+@:cppFileCode('
+	static gme_type_t gme_type_array[] = {
+		gme_ay_type,
+		gme_gbs_type,
+		gme_gym_type,
+		gme_hes_type,
+		gme_kss_type,
+		gme_nsf_type,
+		gme_nsfe_type,
+		gme_sap_type,
+		gme_spc_type,
+		gme_vgm_type,
+		gme_vgz_type};
+')
 class HxGme {
 	@:extern var emu:Dynamic;
 	@:extern var buff:Dynamic;
 	@:extern var handleError:Dynamic->Void;
 	
 	var bufferSample:Int;
-	
+	var s2fLoop:Int;
 	@:void
 	public function new() {
 		untyped __cpp__("
@@ -37,41 +51,26 @@ class HxGme {
 	
 	@:void
 	public function typeInit(type:Int, sample_rate:Int) {
-		untyped __cpp__("
-			gme_remove();
-			switch(type){
-				case 0: emu = gme_new_emu(gme_ay_type, sample_rate);
-					break;
-				case 1: emu = gme_new_emu(gme_gbs_type, sample_rate);
-					break;
-				case 2: emu = gme_new_emu(gme_gym_type, sample_rate);
-					break;
-				case 3: emu = gme_new_emu(gme_hes_type, sample_rate);
-					break;
-				case 4: emu = gme_new_emu(gme_kss_type, sample_rate);
-					break;
-				case 5: emu = gme_new_emu(gme_nsf_type, sample_rate);
-					break;
-				case 6: emu = gme_new_emu(gme_nsfe_type, sample_rate);
-					break;
-				case 7: emu = gme_new_emu(gme_sap_type, sample_rate);
-					break;
-				case 8: emu = gme_new_emu(gme_spc_type, sample_rate);
-					break;
-				case 9: emu = gme_new_emu(gme_vgm_type, sample_rate);
-					break;
-				case 10: emu = gme_new_emu(gme_vgz_type, sample_rate);
-					break;	
-			}
-			
+		untyped __cpp__("			
 			switch(sample_rate){
-				case 22050: bufferSample = 2048;
+				case 22050:
+					bufferSample = 4096;
+					s2fLoop = 2;
 					break;
-				case 11025: bufferSample = 4096;
+				case 11025:
+					bufferSample = 2048;
+					s2fLoop = 4;
 					break;
-				default:  bufferSample = 8192;
+				default:
+					bufferSample = 8192;
+					s2fLoop = 1;
+					if(sample_rate != 44100) sample_rate = 44100;
 					break;
-			}
+			}		
+			
+			gme_remove();
+			
+			emu = gme_new_emu(gme_type_array[type], sample_rate);
 		");
 	}
 	
@@ -124,24 +123,9 @@ class HxGme {
 			handleError(gme_play(emu, len, buff));
 			// float stream
 			// short buff
-			int i, j, loop;
+			int i, j, loop = s2fLoop;
 			float s1, s2;
 			int n = 0, m = 0;
-				
-			switch(bufferSample){
-				case 8192:
-					loop = 1;
-					break;
-				case 4096:
-					loop = 2;
-					break;
-				case 2048:
-					loop = 4;
-					break;
-				default:
-					handleError(\"Unsupported SampleBuff\");
-					break;
-			}
 			
 			len >>= 1;
 			
