@@ -70,13 +70,15 @@ package
 			
 			gme = new Gme();
 			gme.init("nsf");
-			gme.load(new Byte_batman());
-			var info:Object = gme.trackInfo();
+			gme.load(new Byte_batman());		
 			gme.track = 1;
 			gme.play();
-			//for(var k:String in info){
-			//	trace(k + "--> " + info[k]);
-			//}
+			
+			var info:Object = gme.trackInfo(20);
+			trace("track count: " + gme.trackCount);
+			for(var k:String in info){
+				trace(k + "--> " + info[k]);
+			}
 			true && addEventListener(Event.ENTER_FRAME, loop);
 		}
 		
@@ -95,7 +97,7 @@ package
 			_canvas.bitmapData.lock();
 			
 			// スペクトラムの取得
-			SoundMixer.computeSpectrum(data, true); gme
+			SoundMixer.computeSpectrum(data, true);
 			
 			// 色調整
 			var d:Number = Math.max(gme.sndChannel.rightPeak, gme.sndChannel.leftPeak) * .02;

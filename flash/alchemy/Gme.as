@@ -123,8 +123,8 @@ package {
 			return _libgme.trackEnded();
 		}
 		
-		public function trackInfo():Object {
-			return _libgme.trackInfo();
+		public function trackInfo(track:int = 0):Object {
+			return _libgme.trackInfo(track);
 		}
 		
 		public function get tell():int {

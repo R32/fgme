@@ -109,33 +109,39 @@ static AS3_Val trackInfo(void* self, AS3_Val args){
 	AS3_ArrayValue(args, "IntType", &track);
 	
 	gme_info_t* info;
-	handleError( gme_track_info(emu, &info, track) );
+	if( gme_track_info(emu, &info, track) ){
+		return AS3_Null();
+	}else{
+		AS3_Val ret = AS3_Object(
+		"system:StrType,"
+		"game:StrType,"
+		"song:StrType,"
+		"author:StrType,"
+		"copyright:StrType,"
+		"comment:StrType,"
+		"dumper:StrType,"
+		"length:IntType,"
+		"intro_length:IntType,"
+		"loop_length:IntType,"
+		"play_length:IntType",
+		
+		info->system,
+		info->game,
+		info->song,
+		info->author,
+		info->copyright,
+		info->comment,
+		info->dumper,
+		info->length,
+		info->intro_length,
+		info->loop_length,
+		info->play_length);
+		
+		gme_free_info(info);		
+		
+		return ret;
+	}
 	
-	AS3_Val ret = AS3_Object("system:StrType,"
-							"game:StrType,"
-							"song:StrType,"
-							"author:StrType,"
-							"copyright:StrType,"
-							"comment:StrType,"
-							"dumper:StrType,"
-							"length:IntType,"
-							"intro_length:IntType,"
-							"loop_length:IntType,"
-							"play_length:IntType",
-							
-							info->system,
-							info->game,
-							info->song,
-							info->author,
-							info->copyright,
-							info->comment,
-							info->dumper,
-							info->length,
-							info->intro_length,
-							info->loop_length,
-							info->play_length);
-	gme_free_info(info);
-	return ret;
 }
 
 static AS3_Val tell(void* self, AS3_Val args){	
