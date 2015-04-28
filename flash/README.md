@@ -1,7 +1,7 @@
-flashgme
+flash
 -----
 
-整理以前旧的文件夹时,发现的很古老的东西 [Flash DEMO](http://r32.github.io) 
+整理以前旧的文件夹时,发现的很古老的东西
 
  * cygwin 32位
 

@@ -1,4 +1,4 @@
-hxgme
+fgme
 -----
 
 Experimental! 实验性, 尝试 hxcpp/cpp 混合编程
@@ -7,7 +7,7 @@ Experimental! 实验性, 尝试 hxcpp/cpp 混合编程
 
 仅在 winXP 中做过测试. 目前感觉CPU占用 53%, 反而是 flash 生成的同样库却根本不占CPU.
 
- 0. 需要将目录添加到库, `haxelib dev hxgme path/to/hxgme`
+ 0. 需要将目录添加到库, `haxelib dev fgme path/to/fgme`
  
  1. 双击 `tools/gen.hxml` 将在 `project/` 目录下生成 build.xml 和 静态链接库(gme.lib)
  
@@ -30,4 +30,6 @@ Experimental! 实验性, 尝试 hxcpp/cpp 混合编程
 
 #### 其它
 
-以前旧的版本 选择 [Original 分支](https://github.com/R32/hxgme/tree/Original)
+[Flash DEMO](http://r32.github.io)
+
+以前旧的版本 选择 [Original 分支](https://github.com/R32/fgme/tree/Original)

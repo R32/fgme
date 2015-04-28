@@ -6,8 +6,8 @@ import cpp.Pointer;
 import haxe.io.BytesData;
 
 @:buildXml('
-<files id="haxe"><compilerflag value="-I${haxelib:hxgme}/project/gme-master/gme" /></files>
-<target id="haxe"><lib name="${haxelib:hxgme}/project/gme.lib"/></target>
+<files id="haxe"><compilerflag value="-I${haxelib:fgme}/project/gme-master/gme" /></files>
+<target id="haxe"><lib name="${haxelib:fgme}/project/gme.lib"/></target>
 ')
 @:headerCode("#include <gme.h>")
 @:headerClassCode('
