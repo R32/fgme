@@ -6,8 +6,8 @@
     <movie input="" />
     <movie path="gme.swf" />
     <movie fps="60" />
-    <movie width="400" />
-    <movie height="300" />
+    <movie width="512" />
+    <movie height="400" />
     <movie version="10" />
     <movie minorVersion="3" />
     <movie platform="Flash Player" />
