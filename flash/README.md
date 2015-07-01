@@ -15,7 +15,7 @@ flash
 
   - All -> Archive -> zip: Info-ZIP compression utility
 
-  - All -> Perl -> perl: Larry Wall’s Practical Extracting and Report Language
+  - All -> Perl -> perl: Perl programming language interpreter
 
  * 一些配置
 
