@@ -1,5 +1,0 @@
--cp ..
--main Test
--lib hxsdl
--resource batman.nsf
--cpp bin
