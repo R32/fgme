@@ -1,0 +1,6 @@
+# --connect 6000
+# -D dump=pretty
+-dce full
+-cp ../
+-main WaveWriter
+-hl bin/nsf2wav.hl

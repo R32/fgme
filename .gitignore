@@ -1,4 +1,8 @@
 bin
 obj
+dump
+*.hdll
+*.exp
+*.hash
 *.lib
 project/build.xml
