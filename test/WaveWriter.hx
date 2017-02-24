@@ -82,7 +82,7 @@ class WaveWriter {
 			rate >> 16, rate >> 24,
 			bps >>  0, bps >> 8,    // bytes per second
 			bps >> 16, bps >> 24,
-            frame_size, 0,          // bytes per sample frame
+			frame_size, 0,          // bytes per sample frame
 			16, 0,                  // bits per sample
 			'd', 'a', 't', 'a',
 			ds >>  0, ds >>  8,     // size of sample data
