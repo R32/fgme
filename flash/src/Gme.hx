@@ -165,35 +165,3 @@ enum abstract GmeType(Int) {
 	var VGM;
 	var VGZ;
 }
-
-/*
-@:file("../alchemy/libgme.swc") class GMECLib extends flash.utils.ByteArray{}
-
-class CGmeLoader {
-	static function __init__() {
-		loadGMECLib();
-	}
-	static function loadGMECLib() {
-		var loader = new flash.display.Loader();
-		loader.contentLoaderInfo.addEventListener(Event.COMPLETE, function( e : Event ) {
-
-			var clibInit : CLibInit = Type.createInstance(
-				loader.contentLoaderInfo.applicationDomain.getDefinition("cmodule.libgme.CLibInit"), []
-			);
-			@:privateAccess Gme.cgme = clibInit.init();
-		});
-		loader.loadBytes(new GMECLib());
-	}
-}
-
-typedef CLibInit = {
-
-	function init() : Dynamic;
-
-	function supplyFile( path : String, data : ByteArray) : Void;
-
-	function setSprite( sprite : Sprite ) : Void;
-
-	function putEnv( key : String, value : String ) : Void;
-}
-*/
