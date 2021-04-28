@@ -8,6 +8,7 @@ import flash.events.SampleDataEvent;
 import flash.media.Sound;
 import flash.media.SoundChannel;
 import flash.media.SoundTransform;
+import flash.Memory;
 
 class Gme {
 
@@ -25,22 +26,27 @@ class Gme {
 
 	var type : GmeType;
 
+	var samplePtr : Int;
+
 	public function new() {
 		snd = new Sound();
+		samplePtr = 0;
 		transform = new SoundTransform();
 	}
 
-	public function load( file : ByteArray, type : GmeType = NSF) {
+	public function load( file : ByteArray, type : GmeType = NSF) : Bool {
 		@:bypassAccessor this.track = 0;
 		this.type = type;
-		cgme.typeInit(this.type);
-		file.endian = Endian.LITTLE_ENDIAN;
-		file.position = 0;
-		cgme.load(file, file.length);
+		if (cgme.typeInit(this.type)) {
+			file.endian = Endian.LITTLE_ENDIAN;
+			file.position = 0;
+			samplePtr = cgme.load(file, file.length);
+		}
+		return samplePtr != 0;
 	}
 
 	public function play() {
-		if (isPlaying)
+		if (isPlaying || samplePtr == 0)
 			return;
 		snd.addEventListener(SampleDataEvent.SAMPLE_DATA, onSampleData);
 		channel = snd.play(0, 1, transform);
@@ -87,11 +93,24 @@ class Gme {
 
 	static inline var BYTESPERSEC = 8192;
 
-	function onSampleData( e : SampleDataEvent ) {
+	@:deprecated function onSampleDataSlow( e : SampleDataEvent ) {
 		var data = e.data;
-		data.length = (BYTESPERSEC * 4); // sizeof(float)
+		data.length = (BYTESPERSEC * 4);
 		data.endian = Endian.LITTLE_ENDIAN;
 		cgme.play(data);
+	}
+
+	function onSampleData( e : SampleDataEvent ) {
+		var data = e.data;
+		data.length = (BYTESPERSEC * 4);   // sizeof(float)
+		data.endian = Endian.LITTLE_ENDIAN;
+		cgme.playInner();                  // fill buffer in samplePtr
+		var ptr = this.samplePtr;
+		var max = ptr + (BYTESPERSEC * 2); // sizeof(short)
+		while (ptr < max) {
+			data.writeFloat(Memory.signExtend16(Memory.getUI16(ptr)) / 32768.);
+			ptr += 2;
+		}
 	}
 
 	function set_track( t : Int ) : Int {
@@ -105,11 +124,16 @@ class Gme {
 
 typedef CGme = {
 
-	function load( data : ByteArray, size : Int ) : Bool;
+	/**
+	 Returns a pointer to the short buffer.
+	*/
+	function load( data : ByteArray, size : Int ) : Int;
 
 	function typeInit( type : GmeType ) : Bool;
 
 	function play( pcm : ByteArray ) : Void;
+
+	function playInner() : Void;
 
 	function tell() : Int;
 

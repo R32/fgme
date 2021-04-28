@@ -54,7 +54,7 @@ static AS3_Val release(void* self, AS3_Val args) {
 static AS3_Val load(void* self, AS3_Val args) {
 	int len = 0;
 	unsigned char *data = NULL;
-	AS3_Val byteArray = NULL;
+	AS3_Val byteArray = AS3_Undefined();
 
 	AS3_ArrayValue(args,"AS3ValType,IntType", &byteArray, &len);
 
@@ -62,7 +62,7 @@ static AS3_Val load(void* self, AS3_Val args) {
 		emu = gme_new_emu(gme_nsf_type , FREQUENCY);
 
 	if (!emu)
-		return AS3_False();
+		return AS3_Ptr(NULL);
 
 	if (!i16buf) {
 		i16buf = (short*)malloc(sizeof(short) * PERSAMPLE);
@@ -78,9 +78,14 @@ static AS3_Val load(void* self, AS3_Val args) {
 	if (SUCCESS(hr))
 		hr = gme_start_track(emu, 0);
 
+	if (FAILED(hr)) {
+		free(i16buf);
+		free(f32buf);
+		i16buf = NULL;
+		f32buf = NULL;
+	}
 	free(data);
-
-	return SUCCESS(hr) ? AS3_True() : AS3_False();
+	return AS3_Ptr(i16buf);
 }
 
 static AS3_Val startTrack(void* self, AS3_Val args){
@@ -102,32 +107,33 @@ static AS3_Val trackInfo(void* self, AS3_Val args){
 	AS3_ArrayValue(args, "IntType", &track);
 
 	gme_info_t* info;
-	if( gme_track_info(emu, &info, track) ) {
+	if(gme_track_info(emu, &info, track)) {
 		return AS3_Null();
 	} else {
 		AS3_Val ret = AS3_Object(
-		"system:StrType,"
-		"game:StrType,"
-		"song:StrType,"
-		"author:StrType,"
-		"copyright:StrType,"
-		"comment:StrType,"
-		"dumper:StrType,"
-		"length:IntType,"
-		"intro_length:IntType,"
-		"loop_length:IntType,"
-		"play_length:IntType",
-		info->system,
-		info->game,
-		info->song,
-		info->author,
-		info->copyright,
-		info->comment,
-		info->dumper,
-		info->length,
-		info->intro_length,
-		info->loop_length,
-		info->play_length);
+			"system:StrType,"
+			"game:StrType,"
+			"song:StrType,"
+			"author:StrType,"
+			"copyright:StrType,"
+			"comment:StrType,"
+			"dumper:StrType,"
+			"length:IntType,"
+			"intro_length:IntType,"
+			"loop_length:IntType,"
+			"play_length:IntType",
+			info->system,
+			info->game,
+			info->song,
+			info->author,
+			info->copyright,
+			info->comment,
+			info->dumper,
+			info->length,
+			info->intro_length,
+			info->loop_length,
+			info->play_length
+		);
 		gme_free_info(info);
 		return ret;
 	}
@@ -143,6 +149,7 @@ static AS3_Val seek(void* self, AS3_Val args){
 	return SUCCESS(gme_seek(emu, msec)) ? AS3_True() : AS3_False();
 }
 
+// deprecated
 static AS3_Val play(void* self, AS3_Val args) {
 	AS3_Val byteArray = AS3_Undefined();
 	AS3_ArrayValue(args, "AS3ValType", &byteArray);
@@ -154,6 +161,11 @@ static AS3_Val play(void* self, AS3_Val args) {
 		i++;
 	}
 	AS3_ByteArray_writeBytes(byteArray, (void*)f32buf , (sizeof(float) * PERSAMPLE));
+	return AS3_Null();
+}
+
+static AS3_Val playInner(void* self, AS3_Val args) {
+	gme_play(emu, PERSAMPLE, i16buf);
 	return AS3_Null();
 }
 
@@ -195,6 +207,7 @@ int main(int argc, char* argv[]){
 	gg_reg(gg_lib, "load", load);
 	gg_reg(gg_lib, "typeInit", typeInit);
 	gg_reg(gg_lib, "play", play);
+	gg_reg(gg_lib, "playInner", playInner);
 	gg_reg(gg_lib, "release", release);
 	gg_reg(gg_lib, "tell", tell);
 	gg_reg(gg_lib, "seek", seek);
