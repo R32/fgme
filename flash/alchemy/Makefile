@@ -2,32 +2,35 @@
 SWC := libgme.swc
 LIB := libgme.a
 
-BUILD    := release
+BUILD    := bin
 SOURCES  := ../../project/gme-master/gme
 INCLUDES := -I$(SOURCES)
 
-CFLAGS   := -Wall -O3 -ffast-math -fno-rtti -fno-exceptions
+# BUG: -DNDEBUG seems doesn't work
+CFLAGS   := -Wall -DNODEBUG -O3 -ffast-math -fno-rtti -fno-exceptions
 CFLAGS   += $(INCLUDES)
 CXXFLAGS := $(CFLAGS)
 
-CC       := $(PREFIX)gcc
-CXX      := $(PREFIX)g++
+CC       := gcc
+CXX      := g++
+
 VPATH    := $(CURDIR) $(SOURCES)
 CFILES   := $(notdir $(wildcard $(SOURCES)/*.c))
 CPPFILES :=	$(notdir $(wildcard $(SOURCES)/*.cpp))
 BINFILES := $(addprefix $(BUILD)/, $(CPPFILES:.cpp=.o) $(CFILES:.c=.o))
 
+
 all: $(BUILD) $(SWC)
 
 clean:
 	@echo clean ...
-	@rm -fr debug release $(SWC)
+	@rm -fr $(BUILD)/** $(SWC)
 
-.PHONY: $(BUILD) clean
+.PHONY: all clean
 
 $(BUILD)/%.o: %.cpp
-	@echo $(notdir $<)
-	$(CXX) $(CXXFLAGS) -c $< -o $@
+	@$(CXX) $(CXXFLAGS) -c $< -o $@
+	@echo Compile $< TO $@
 
 $(BUILD)/%.o: %.c
 	@echo $(notdir $<)
@@ -35,11 +38,12 @@ $(BUILD)/%.o: %.c
 
 # libgme.a
 $(BUILD)/$(LIB): $(BINFILES)
-	ar rcs $@ $^
+	@ar rcs $@ $^
+	@echo Archived $@
 
 # make output dir
 $(BUILD):
-	@[ -d $@ ] || mkdir -p $@
+	@mkdir -p $@
 
 $(SWC): $(BUILD)/glue.o $(BUILD)/$(LIB)
 	@rm -f "$@"
